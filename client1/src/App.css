@@ -32,3 +32,11 @@
     color: aqua;
     background-color: black;
 }
+.lbutton{
+    display: block;
+    display: inline-block;
+    text-align: center;
+    font-size: 1cm;
+    color: red;
+    background-color: royalblue;
+}
