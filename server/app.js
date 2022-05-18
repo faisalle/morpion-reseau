@@ -13,7 +13,7 @@ var player = 'X'
 
 const io = socketIo(server, {
     cors: {
-        origin:('http://192.168.39.41:3000')
+        origin:('http://localhost:3000')
     }
 })
 var grid = ['','','','','','','','','']
@@ -58,7 +58,7 @@ io.on("connection", socket => {
 
         if((grid[pos]==='X' || grid[pos]==='O')){
           console.log('case taken ')
-          
+          socket.emit('case taken')
         }
        else if (socket===client1 && player==='X'){
             grid[pos] = 'X'

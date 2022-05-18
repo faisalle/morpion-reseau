@@ -3,6 +3,8 @@ import React, { useEffect, useState } from 'react';
 import {io} from 'socket.io-client'
 
 const Grid = ({socket, logout}) => {
+    const [win, setWin] = useState(false)
+    const [casetaken, setCaseTaken] = useState(false)
     const [grid, setGrid] = useState (
         ['','','','','','','','',''] )
 
@@ -11,14 +13,24 @@ const Grid = ({socket, logout}) => {
             var newGrid = grid.slice()
             newGrid[pos]=form
             setGrid(newGrid)
+            setWin(false)
+            setCaseTaken(false)
         socket.on('winX',() => {
             setGrid(['','','','','','','','',''])
+            setWin('partie gagné par X')
         })
         socket.on('winO',() => {
             setGrid(['','','','','','','','',''])
+            setWin('partie gagné par O')
+
         })
         socket.on('draw',() => {
             setGrid(['','','','','','','','',''])
+            setWin(`Pas de gagnant rejouer`)
+
+        })
+        socket.on('case taken',() => {
+            setCaseTaken('case taken')
         })
         
         })
@@ -28,11 +40,15 @@ const Grid = ({socket, logout}) => {
     return (
         <div>
             <h1 className='title'>TIK TAK TOE</h1>   
+            <div className='wincontainer'>
+             <div className='winPrint'>{win}{casetaken}</div>
+            </div>
             <div className='gridcontainer'>
                 <div className="block" onClick={() =>socket.emit('clickSquare', 0)}> {grid[0]}</div>
-                <div className="block" onClick={() =>socket.emit('clickSquare', 1)}> {grid[1]}</div>
+                <div className="block" onClick={() =>socket.emit('clickSquare', 1)}> {grid[1]}</div> 
                 <div className="block" onClick={() =>socket.emit('clickSquare', 2)}> {grid[2]}</div>
             </div>
+            
             <div className='gridcontainer'>
                 <div className="block" onClick={() =>socket.emit('clickSquare', 3)}> {grid[3]}</div>
                 <div className="block" onClick={() =>socket.emit('clickSquare', 4)}> {grid[4]}</div>
@@ -43,7 +59,11 @@ const Grid = ({socket, logout}) => {
                 <div className="block" onClick={() =>socket.emit('clickSquare', 7)}> {grid[7]}</div>
                 <div className="block" onClick={() =>socket.emit('clickSquare', 8)}> {grid[8]}</div>
             </div>
-            <button className="lbutton" onClick={() => socket.emit("quit")}>Quit</button>
+            <div className='wincontainer'>
+             <div className='winPrint'>{win}{casetaken}</div>
+            </div>
+         
+            <button className="quitbutton" onClick={() => socket.emit("quit")}>Quit</button>
         </div>
     )  
 }
@@ -51,7 +71,7 @@ const Grid = ({socket, logout}) => {
 const Loading = ({socket,waiting, logout}) =>{
     return(
         <React.Fragment>
-            <div className='title'>{waiting}</div>
+            <div  className='loadingtitle'>{waiting}</div>
                 <div className="containerLogout">
                     <button className="button"onClick={() =>  socket.emit("logout")}>{logout}</button>
             </div>  
@@ -64,9 +84,9 @@ const PreGame = ({socket}) => {
     return (
         <div className="App">
             <h1 className='title'> Jeux du morpion </h1>
-            <div className="container">
+            <div className="joincontainer">
                 <button className="button"onClick={() => socket.emit("join game")}>join the game</button>
-            </div>     
+            </div>  
         </div>
     )
 }
@@ -80,7 +100,7 @@ function App() {
 
   
     useEffect(() => {
-        const socket = io('http://192.168.39.41:8080')
+        const socket = io('http://localhost:8080')
         socket.on("loading ...", () => {
             setLoading(true)
             setWaiting('waiting for friend that you dont have...') 
