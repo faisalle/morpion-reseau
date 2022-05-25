@@ -1,3 +1,7 @@
+.div{
+    height:fit-content ;
+    text-align: center;
+}
 .block {
     display: inline-block;
     border: 3.5px solid rgb(0, 0, 0);
@@ -19,15 +23,15 @@
     justify-content:center;
 }
 .title { 
-    animation:title 30s infinite linear;
+    animation:title 5s infinite linear;
     text-align: center;
     color: rgb(7, 7, 7);
     font-size: 1.5cm;
     height: 40px;
 }
 @keyframes title{
-    0%{color: rgb(0, 0, 0);}
-    5%{color: rgba(221, 26, 0, 0);}
+    5%{color: rgb(0, 0, 0);}
+    5%{color: rgba(221, 26, 0);}
     40%{color: rgb(0, 204, 255);}
     70%{color: rgb(253, 0, 177);}
     100%{color: salmon;}
@@ -56,7 +60,7 @@
     text-align: center;
     color: rgb(119, 0, 255);
     font-size: 40px;
-    height:20px;
+    height:30px;
 }
 @keyframes winprint{
     10%{
@@ -70,7 +74,7 @@
 }
 .containerLogout{
     text-align: center;
-    margin-top: 2cm;
+    margin-top: 8cm;
 }
 .joincontainer{
     margin-top: 150px;

@@ -2,7 +2,7 @@ import './App.css';
 import React, { useEffect, useState } from 'react';
 import {io} from 'socket.io-client'
 
-const Grid = ({socket, logout}) => {
+const Grid = ({socket, logout, dataGame, setDataGame}) => {
     const [win, setWin] = useState(false)
     const [casetaken, setCaseTaken] = useState(false)
     const [grid, setGrid] = useState (
@@ -18,15 +18,18 @@ const Grid = ({socket, logout}) => {
         socket.on('winX',() => {
             setGrid(['','','','','','','','',''])
             setWin('partie gagné par X')
+            setDataGame({...dataGame, winX : dataGame.winX + 1})
         })
         socket.on('winO',() => {
             setGrid(['','','','','','','','',''])
             setWin('partie gagné par O')
+            setDataGame({...dataGame, winO : dataGame.winO+ 1})
 
         })
         socket.on('draw',() => {
             setGrid(['','','','','','','','',''])
             setWin(`Pas de gagnant rejouer`)
+            setDataGame({...dataGame, draw : dataGame.draw+ 1})
 
         })
         socket.on('case taken',() => {
@@ -35,7 +38,7 @@ const Grid = ({socket, logout}) => {
         
         })
         return () => socket.off('played')
-    }, [grid,socket])
+    }, [grid,socket,dataGame,setDataGame])
 
     return (
         <div>
@@ -80,14 +83,30 @@ const Loading = ({socket,waiting, logout}) =>{
 
 }
 
-const PreGame = ({socket}) => {
+const PreGame = ({socket,dataGame}) => {
     return (
         <div className="App">
             <h1 className='title'> Jeux du morpion </h1>
             <div className="joincontainer">
                 <button className="button"onClick={() => socket.emit("join game")}>join the game</button>
             </div>  
+            <div className="div">
+                <div className="div">victory X ={dataGame.winX} </div>
+            </div> 
+            <div className="joincontainer">
+                <div className="div">victory O ={dataGame.winO} </div>
+            </div> 
+            <div className="joincontainer">
+                <div className="div">draw match={dataGame.draw} </div>
+            </div> 
+
         </div>
+    )
+}
+
+const WaitingServer = () => {
+    return(
+        <div className='title'>Chargement.......</div>
     )
 }
 
@@ -97,10 +116,15 @@ function App() {
     const [loading, setLoading] = useState(false)
     const [logout, setLogout] = useState(false)
     const [gameStarted, setGameStarted] = useState(false)
-
-  
+    const [dataGame,setDataGame] = useState(false)
+    
     useEffect(() => {
         const socket = io('http://localhost:8080')
+        socket.on("dataGame",(dataGame) =>{
+            
+            setDataGame(dataGame)
+        })
+
         socket.on("loading ...", () => {
             setLoading(true)
             setWaiting('waiting for friend that you dont have...') 
@@ -119,14 +143,20 @@ function App() {
             setGameStarted(false)
         })
         setSocket(socket)
+        console.log("confirmer")
+        socket.emit("getDataGame")
         return () => socket.disconnect()
     }, [])
 
+    if (!dataGame)
+        return(<WaitingServer/>)
     if (gameStarted && !loading){
         console.log("gameStarted")
         return <Grid
                     logout={logout}
                     socket={socket}
+                    dataGame={dataGame}
+                    setDataGame={setDataGame}
                 />
     }
     else if(loading){
@@ -139,7 +169,8 @@ function App() {
     }
     else{
         return <PreGame
-                    socket={socket}                    
+                    socket={socket}      
+                    dataGame={dataGame}              
                 />}
 }
 
