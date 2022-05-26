@@ -17,12 +17,12 @@ const Grid = ({socket, logout, dataGame, setDataGame}) => {
             setCaseTaken(false)
         socket.on('winX',() => {
             setGrid(['','','','','','','','',''])
-            setWin('partie gagné par X')
+            setWin('VICTORY X!')
             setDataGame({...dataGame, winX : dataGame.winX + 1})
         })
         socket.on('winO',() => {
             setGrid(['','','','','','','','',''])
-            setWin('partie gagné par O')
+            setWin('VICTORY O!')
             setDataGame({...dataGame, winO : dataGame.winO+ 1})
 
         })
@@ -42,9 +42,11 @@ const Grid = ({socket, logout, dataGame, setDataGame}) => {
 
     return (
         <div>
-            <h1 className='title'>TIK TAK TOE</h1>   
+            <h1 className='title'>TIK TAK TOE</h1>  
+ 
             <div className='wincontainer'>
-             <div className='winPrint'>{win}{casetaken}</div>
+           
+             <div className='winPrint'>{win}</div>
             </div>
             <div className='gridcontainer'>
                 <div className="block" onClick={() =>socket.emit('clickSquare', 0)}> {grid[0]}</div>
@@ -63,7 +65,8 @@ const Grid = ({socket, logout, dataGame, setDataGame}) => {
                 <div className="block" onClick={() =>socket.emit('clickSquare', 8)}> {grid[8]}</div>
             </div>
             <div className='wincontainer'>
-             <div className='winPrint'>{win}{casetaken}</div>
+                <div className='caseTaken'>{casetaken}</div>
+                <div className='winPrint'>{win}</div>
             </div>
          
             <button className="quitbutton" onClick={() => socket.emit("quit")}>Quit</button>
@@ -90,16 +93,11 @@ const PreGame = ({socket,dataGame}) => {
             <div className="joincontainer">
                 <button className="button"onClick={() => socket.emit("join game")}>join the game</button>
             </div>  
-            <div className="div">
-                <div className="div">victory X ={dataGame.winX} </div>
-            </div> 
-            <div className="joincontainer">
-                <div className="div">victory O ={dataGame.winO} </div>
-            </div> 
-            <div className="joincontainer">
-                <div className="div">draw match={dataGame.draw} </div>
-            </div> 
-
+            <div className='div'>
+                <div className='margintop'>victory X ={dataGame.winX} </div>
+                <div className='margintop'>victory O ={dataGame.winO} </div>
+                <div className='margintop'>draw match={dataGame.draw} </div>
+            </div>
         </div>
     )
 }
@@ -127,7 +125,7 @@ function App() {
 
         socket.on("loading ...", () => {
             setLoading(true)
-            setWaiting('waiting for friend that you dont have...') 
+            setWaiting('waiting for friend.........') 
             setLogout('Logout')
             setGameStarted(false)
         })
