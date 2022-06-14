@@ -38,7 +38,7 @@
     justify-content:center;
 }
 .title { 
-    animation:title 5s infinite linear;
+    animation:title 10s infinite linear;
     background-color: rgb(190, 243, 225);
     text-align: center;
     color: rgb(7, 7, 7);
@@ -71,8 +71,9 @@
 }
 .caseTaken{
     animation:caseTaken 5s infinite linear;
-    display: block;
+    display: inline-block;
     text-align: center;
+    width: fit-content;
     color: rgb(119, 0, 255);
     font-size: 40px;
 }
@@ -85,9 +86,10 @@
     50% {
         color: rgb(0, 255, 55);
         text-shadow: none;
+        transform: translateX(140px);
     }
     80%{color:rgb(0, 4, 255);
-        transform: translateX(-40px);
+        transform: translateX(-140px);
     }
 }
 .winPrint { 
